@@ -1,0 +1,5 @@
+[package]
+
+name = "karaorust"
+version = "0.0.1"
+authors = ["Laurent Arnoud <laurent@spkdev.net>"]
