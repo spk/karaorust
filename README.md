@@ -11,7 +11,7 @@ cargo build
 Run with:
 
 ~~~ console
-cargo run
+./target/karaorust FILE
 ~~~
 
 ## License

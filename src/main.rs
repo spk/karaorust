@@ -1,10 +1,16 @@
+use std::os;
 use std::io::BufferedReader;
 use std::io::File;
 use std::io::timer;
 use std::time::duration::Duration;
 
 fn main() {
-    let path = Path::new("Natalie_Portman_-_Natalies_Rap.txt");
+    let args = os::args();
+    if args.len() < 2 {
+        println!("USAGE: {} [file]", args[0]);
+        panic!();
+    }
+    let path = Path::new(args[1].as_slice());
     let mut file = BufferedReader::new(File::open(&path));
     let lines: Vec<String> = file.lines().map(|x| x.unwrap()).collect();
 
@@ -17,8 +23,10 @@ fn main() {
             let duration = row[1].parse::<i64>().unwrap() * 100;
             let interval = Duration::milliseconds(duration);
             let text = row.slice(3, row.len());
-            println!("{}", text);
+            println!("{} ", text);
             timer::sleep(interval);
+        } else if line.char_at(0) == '-' {
+            println!("{}", "");
         }
     }
 }
