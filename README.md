@@ -2,7 +2,7 @@
 
 Karoke on console
 
-Build with:
+Build with (currently rustc 1.0.0):
 
 ~~~ console
 cargo build
@@ -11,7 +11,7 @@ cargo build
 Run with:
 
 ~~~ console
-./target/karaorust FILE
+./target/debug/karaorust FILE
 ~~~
 
 ## License
