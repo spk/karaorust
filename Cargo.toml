@@ -7,3 +7,6 @@ description = "Karoke on console"
 repository = "https://github.com/spk/karaorust"
 keywords = ["karaoke", "console"]
 license = "WTFPL"
+
+[dependencies]
+combine = { git = "https://github.com/Marwes/combine" }

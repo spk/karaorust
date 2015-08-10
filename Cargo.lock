@@ -1,4 +1,12 @@
 [root]
 name = "karaorust"
 version = "0.0.1"
+dependencies = [
+ "combine 1.0.0-beta (git+https://github.com/Marwes/combine)",
+]
+
+[[package]]
+name = "combine"
+version = "1.0.0-beta"
+source = "git+https://github.com/Marwes/combine#dead9e17b70bcd9688c4c4caf1cd2997c3066794"
 
