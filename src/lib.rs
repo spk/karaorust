@@ -1,3 +1,5 @@
+#![crate_name = "karaorust"]
+
 extern crate combine;
 use combine::*;
 use combine::primitives::Stream;
@@ -20,7 +22,7 @@ pub struct Karaoke {
     pub lyrics: Vec<Lyric>
 }
 
-fn header<I>(input: State<I>) -> ParseResult<Header, I>
+pub fn header<I>(input: State<I>) -> ParseResult<Header, I>
 where I: Stream<Item=char> {
     let lex_char = |c| char(c).skip(spaces());
     (lex_char('#')
@@ -35,7 +37,7 @@ where I: Stream<Item=char> {
         }).parse_state(input)
 }
 
-fn lyric<I>(input: State<I>) -> ParseResult<Lyric, I>
+pub fn lyric<I>(input: State<I>) -> ParseResult<Lyric, I>
 where I: Stream<Item=char> {
     (char(':')
      , spaces()
@@ -54,7 +56,7 @@ where I: Stream<Item=char> {
         }).parse_state(input)
 }
 
-fn karaoke<I>(input: State<I>) -> ParseResult<Karaoke, I>
+pub fn karaoke<I>(input: State<I>) -> ParseResult<Karaoke, I>
 where I: Stream<Item=char> {
     (parser(header), newline(), parser(lyric), newline(), char('E'))
         .map(|(h, _, l, _, _)| {
@@ -65,37 +67,5 @@ where I: Stream<Item=char> {
     }).parse_state(input)
 }
 
-#[cfg(not(test))]
-fn main() {
-}
-
-#[test]
-fn test_header_line() {
-    let lines = "#TITLE:Natalie's Rap";
-    let result = parser(header).parse(lines);
-    let expr = Header { key: "TITLE".to_string(),
-                        value: "Natalie's Rap".to_string()
-    };
-    assert_eq!(result, Ok((expr, "")));
-}
-
-#[test]
-fn test_lyric_line() {
-    let lines = ": 1 13 50 We're sitting here today with";
-    let result = parser(lyric).parse(lines);
-    let expr = Lyric { duration: 1300,
-                       text: "We\'re sitting here today with".to_string()
-    };
-    assert_eq!(result, Ok((expr, "")));
-}
-
-#[test]
-fn test_karaoke_simple() {
-    let lines = "#TITLE:Natalie's Rap\n: 1 13 50 We're sitting here today with\nE";
-    let result = parser(karaoke).parse(lines);
-    let expr = Karaoke {
-        headers: vec![Header { key: "TITLE".to_string(), value: "Natalie's Rap".to_string()}],
-        lyrics: vec![Lyric { duration: 1300, text: "We\'re sitting here today with".to_string() }]
-    };
-    assert_eq!(result, Ok((expr, "")));
-}
+#[cfg(test)]
+mod tests;
