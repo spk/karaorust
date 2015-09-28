@@ -9,4 +9,4 @@ keywords = ["karaoke", "console"]
 license = "WTFPL"
 
 [dependencies]
-combine = { git = "https://github.com/Marwes/combine" }
+combine = "1.0.1"
