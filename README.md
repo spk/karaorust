@@ -19,3 +19,6 @@ Run with:
 2015 Laurent Arnoud <laurent@spkdev.net>
 
 See [LICENSE](LICENSE).
+
+---
+[![Build Status](https://travis-ci.org/spk/karaorust.svg?branch=master)](https://travis-ci.org/spk/karaorust)
