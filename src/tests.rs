@@ -54,8 +54,7 @@ fn test_karaoke_complete() {
         .unwrap();
     let text = from_iter(data.chars());
     match parser(karaoke).parse(text.clone()) {
-        Ok((Karaoke(_), _)) => (),
-        Ok(_) => assert!(false),
+        Ok(_) => assert!(true),
         Err(err) => {
             println!("{}", err);
             assert!(false);
