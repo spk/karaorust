@@ -18,7 +18,7 @@ pub struct Karaoke {
     pub lyrics: Vec<Lyric>
 }
 
-pub fn header<I>(input: State<I>) -> ParseResult<(String, String), I>
+fn header<I>(input: State<I>) -> ParseResult<(String, String), I>
 where I: Stream<Item=char> {
     let lex_char = |c| char(c).skip(spaces());
     (lex_char('#')
@@ -37,7 +37,7 @@ where I: Stream<Item=char> {
         .parse_state(input)
 }
 
-pub fn lyric<I>(input: State<I>) -> ParseResult<Lyric, I>
+fn lyric<I>(input: State<I>) -> ParseResult<Lyric, I>
 where I: Stream<Item=char> {
     (char(':')
      , spaces()
