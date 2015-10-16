@@ -1,6 +1,11 @@
 #![crate_name = "karaorust"]
 
 use std::collections::HashMap;
+use std::error::Error;
+use std::fs::File;
+use std::path::Path;
+use std::io::prelude::*;
+use std::process;
 
 extern crate combine;
 use combine::*;
@@ -75,6 +80,35 @@ where I: Stream<Item=char> {
                 lyrics: l
             }
     }).parse_state(input)
+}
+
+fn print_usage(program: &str) {
+    let brief = format!("Usage: {} FILE", program);
+    print!("{}", &brief);
+}
+
+pub fn read_karaoke_file(input: &str, program: &str) -> String {
+    let path = Path::new(&input);
+    let display = path.display();
+    let mut file = match File::open(&path) {
+        Err(err) => {
+            println!("couldn't open {}: {}", display, Error::description(&err));
+            print_usage(&program);
+            process::exit(1);
+        },
+        Ok(file) => file,
+    };
+
+    let mut buffer = String::new();
+    match file.read_to_string(&mut buffer) {
+        Err(err) => {
+            println!("couldn't read {}: {}", display, Error::description(&err));
+            print_usage(&program);
+            process::exit(1);
+        },
+        Ok(_) => print!("Starting karaoke with {}", display),
+    }
+    buffer
 }
 
 #[cfg(test)]

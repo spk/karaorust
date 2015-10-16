@@ -48,11 +48,10 @@ fn test_karaoke_simple() {
 
 #[test]
 fn test_karaoke_complete() {
-    let mut data = String::new();
-    File::open(&Path::new(&"data/Natalie_Portman_-_Natalies_Rap.txt"))
-        .and_then(|mut file| file.read_to_string(&mut data))
-        .unwrap();
-    let text = from_iter(data.chars());
+    let program = "karaorust";
+    let input = "data/Natalie_Portman_-_Natalies_Rap.txt";
+    let buffer = read_karaoke_file(input, program);
+    let text = from_iter(buffer.chars());
     match parser(karaoke).parse(text.clone()) {
         Ok(_) => assert!(true),
         Err(err) => {
