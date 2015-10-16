@@ -15,7 +15,7 @@ use combine::primitives::Stream;
 
 #[derive(PartialEq, Debug)]
 pub struct Lyric {
-    pub duration: i32,
+    pub duration: u32,
     pub text: String,
 }
 
@@ -58,7 +58,7 @@ where I: Stream<Item=char> {
      , newline())
         .map(|(_, _, _, _, duration, _, _, _, text, _)| {
             Lyric {
-                duration: duration.parse::<i32>().unwrap() * 100,
+                duration: duration.parse::<u32>().unwrap() * 100,
                 text: text.trim_right().to_string()
             }
         })
@@ -141,7 +141,7 @@ pub fn parse_karaoke_file(input: &str, program: &str) {
             }
             for lyric in k.lyrics.iter() {
                 println!("{}", lyric.text);
-                sleep_ms(lyric.duration as u32);
+                sleep_ms(lyric.duration);
             }
         },
         Err(err) => {
