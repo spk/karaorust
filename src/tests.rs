@@ -3,10 +3,6 @@ use super::*;
 use std::collections::HashMap;
 use combine::*;
 
-use std::io::prelude::*;
-use std::fs::File;
-use std::path::Path;
-
 #[test]
 fn test_header_line() {
     let lines = "#TITLE:Natalie's Rap\n#ARTIST:Natalie Portman\nE";
@@ -53,7 +49,7 @@ fn test_karaoke_complete() {
     let buffer = read_karaoke_file(input, program);
     let text = from_iter(buffer.chars());
     match parser(karaoke).parse(text.clone()) {
-        Ok(_) => assert!(true),
+        Ok((k, _)) => assert!(true),
         Err(err) => {
             println!("{}", err);
             assert!(false);
