@@ -68,8 +68,8 @@ where I: Stream<Item=char> {
 
 pub fn karaoke<I>(input: State<I>) -> ParseResult<Karaoke, I>
 where I: Stream<Item=char> {
-    (parser(headers), many(parser(lyric).skip(parser(split))), parser(split), char('E'))
-        .map(|(h, l, _, _)| {
+    (parser(headers), many(parser(lyric).skip(parser(split))), char('E'))
+        .map(|(h, l, _)| {
             Karaoke {
                 header: h,
                 lyrics: l
