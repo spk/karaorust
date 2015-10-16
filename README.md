@@ -1,17 +1,29 @@
 # Karaorust
 
-Karoke on console
+Karaoke on console
 
-Build with (currently rustc 1.0.0):
+Build with:
 
-~~~ console
+~~~
 cargo build
 ~~~
 
 Run with:
 
-~~~ console
-./target/debug/karaorust FILE
+~~~
+cargo run --bin karaorust FILE
+~~~
+
+## Release
+
+~~~
+cargo build --release
+~~~
+
+## Tests
+
+~~~
+cargo test
 ~~~
 
 ## License
