@@ -7,6 +7,7 @@ use std::path::Path;
 use std::io::prelude::*;
 use std::process;
 use std::env;
+use std::thread::sleep_ms;
 
 extern crate combine;
 use combine::*;
@@ -83,7 +84,7 @@ where I: Stream<Item=char> {
     }).parse_state(input)
 }
 
-pub fn print_usage(program: &str) {
+fn print_usage(program: &str) {
     let brief = format!("Usage: {} FILE", program);
     println!("{}", &brief);
 }
@@ -127,6 +128,27 @@ pub fn read_karaoke_file(input: &str, program: &str) -> String {
         Ok(_) => println!("Starting karaoke with {}", display),
     }
     buffer
+}
+
+pub fn parse_karaoke_file(input: &str, program: &str) {
+    let buffer = read_karaoke_file(&input, &program);
+    let text = from_iter(buffer.chars());
+
+    match parser(karaoke).parse(text.clone()) {
+        Ok((k, _)) => {
+            for (k, v) in k.header.iter() {
+                println!("{} ~> {}", k, v);
+            }
+            for lyric in k.lyrics.iter() {
+                println!("{}", lyric.text);
+                sleep_ms(lyric.duration as u32);
+            }
+        },
+        Err(err) => {
+            println!("Couldn't read file: {}", Error::description(&err));
+            process::exit(1);
+        }
+    };
 }
 
 #[cfg(test)]
