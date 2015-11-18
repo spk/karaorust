@@ -1,9 +1,8 @@
 extern crate karaorust;
-extern crate combine;
 
 use std::env;
 
-use karaorust::*;
+use karaorust::{ parse_karaoke_file, input_from_args };
 
 #[cfg(not(test))]
 fn main() {
