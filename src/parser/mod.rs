@@ -1,9 +1,13 @@
-extern crate combine;
-
 use combine::*;
 use combine::primitives::Stream;
 
 use std::collections::HashMap;
+use std::error::Error;
+use std::fs::File;
+use std::path::Path;
+use std::io::prelude::*;
+use std::process;
+use std::thread::sleep_ms;
 
 #[derive(PartialEq, Debug)]
 pub struct Lyric {
@@ -76,7 +80,45 @@ where I: Stream<Item=char> {
     }).parse_state(input)
 }
 
-fn print_usage(program: &str) {
-    let brief = format!("Usage: {} FILE", program);
-    println!("{}", &brief);
+pub fn read_karaoke_file(input: &str) -> String {
+    let path = Path::new(&input);
+    let display = path.display();
+    let mut file = match File::open(&path) {
+        Err(err) => {
+            println!("Couldn't open {}: {}", display, Error::description(&err));
+            process::exit(1);
+        },
+        Ok(file) => file,
+    };
+
+    let mut buffer = String::new();
+    match file.read_to_string(&mut buffer) {
+        Err(err) => {
+            println!("Couldn't read {}: {}", display, Error::description(&err));
+            process::exit(1);
+        },
+        Ok(_) => println!("Starting karaoke with {}", display),
+    }
+    buffer
+}
+
+pub fn parse_karaoke_file(input: &str) {
+    let buffer = read_karaoke_file(&input);
+    let text = from_iter(buffer.chars());
+
+    match parser(karaoke).parse(text.clone()) {
+        Ok((k, _)) => {
+            for (k, v) in k.header.iter() {
+                println!("{} ~> {}", k, v);
+            }
+            for lyric in k.lyrics.iter() {
+                println!("{}", lyric.text);
+                sleep_ms(lyric.duration);
+            }
+        },
+        Err(err) => {
+            println!("Couldn't read file: {}", Error::description(&err));
+            process::exit(1);
+        }
+    };
 }

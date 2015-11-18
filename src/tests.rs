@@ -1,4 +1,4 @@
-use super::*;
+use super::{ karaoke, read_karaoke_file, Karaoke, Lyric };
 
 use std::collections::HashMap;
 use combine::*;
@@ -44,9 +44,8 @@ fn test_karaoke_simple() {
 
 #[test]
 fn test_karaoke_complete() {
-    let program = "karaorust";
     let input = "data/Natalie_Portman_-_Natalies_Rap.txt";
-    let buffer = read_karaoke_file(input, program);
+    let buffer = read_karaoke_file(input);
     let text = from_iter(buffer.chars());
     match parser(karaoke).parse(text.clone()) {
         Ok((_, _)) => assert!(true),
