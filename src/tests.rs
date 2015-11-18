@@ -1,7 +1,8 @@
-use super::{ karaoke, read_karaoke_file, Karaoke, Lyric };
-
 use std::collections::HashMap;
+
 use combine::*;
+
+use super::{ karaoke, read_karaoke_file, Karaoke, Lyric };
 
 #[test]
 fn test_header_line() {

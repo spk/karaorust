@@ -1,6 +1,3 @@
-use combine::*;
-use combine::primitives::Stream;
-
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs::File;
@@ -8,6 +5,12 @@ use std::path::Path;
 use std::io::prelude::*;
 use std::process;
 use std::thread::sleep_ms;
+
+use combine::primitives::{ from_iter, Parser, ParseError, ParseResult, State, Stream };
+use combine::combinator::{ many, parser, satisfy, Expected, Skip, skip_many, skip_many1, token,
+                           FnParser, ParserExt };
+use combine::char::{ char, digit, space, spaces, Spaces, string, newline, alpha_num };
+
 
 #[derive(PartialEq, Debug)]
 pub struct Lyric {
