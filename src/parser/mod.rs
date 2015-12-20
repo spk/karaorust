@@ -1,7 +1,10 @@
+extern crate rodio;
+
 use std::collections::HashMap;
 use std::error::Error;
-use std::fs::File;
-use std::path::Path;
+use std::fs::{ File, metadata };
+use std::path::{ Path, PathBuf };
+use std::io::BufReader;
 use std::io::prelude::*;
 use std::process;
 use std::thread::sleep_ms;
@@ -111,12 +114,36 @@ pub fn parse_karaoke_file(input: &str) {
 
     match parser(karaoke).parse(text.clone()) {
         Ok((k, _)) => {
-            for (k, v) in k.header.iter() {
-                println!("{} ~> {}", k, v);
+            for (key, value) in k.header.iter() {
+                println!("{} ~> {}", key, value);
             }
-            for lyric in k.lyrics.iter() {
-                println!("{}", lyric.text);
-                sleep_ms(lyric.duration);
+
+            if k.header.contains_key("MP3") {
+                let mut music_path_buf = PathBuf::from(&input);
+                music_path_buf.set_file_name(k.header.get("MP3").unwrap());
+                let music_file_path = music_path_buf.as_path();
+                // https://github.com/rust-lang/rust/issues/27725
+                match metadata(music_file_path) {
+                    Err(err) => {
+                        println!("Couldn't read music file: {}, {}"
+                                 , music_file_path.display()
+                                 , Error::description(&err));
+                    },
+                    Ok(_) => {
+                        let gap = k.header.get("GAP").unwrap();
+                        let endpoint = rodio::get_default_endpoint().unwrap();
+                        let sink = rodio::Sink::new(&endpoint);
+
+                        let file = File::open(music_file_path).unwrap();
+                        sink.append(rodio::Decoder::new(BufReader::new(file)).unwrap());
+                        sleep_ms(gap.parse::<u32>().unwrap());
+
+                        for lyric in k.lyrics.iter() {
+                            println!("{}", lyric.text);
+                            sleep_ms(lyric.duration);
+                        }
+                    }
+                }
             }
         },
         Err(err) => {

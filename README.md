@@ -2,13 +2,19 @@
 
 Karaoke on console
 
-Build with:
+## Deps
+
+~~~
+apt install libasound2-dev pkg-config
+~~~
+
+## Build
 
 ~~~
 cargo build
 ~~~
 
-Run with:
+## Run
 
 ~~~
 cargo run --bin karaorust FILE

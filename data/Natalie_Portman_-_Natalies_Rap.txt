@@ -1,6 +1,6 @@
 #TITLE:Natalie's Rap
 #ARTIST:Natalie Portman
-#MP3:Natalie_Portman_-_Natalies_Rap.mp3
+#MP3:Natalie_Portman_-_Natalies_Rap.ogg
 #COVER:Natalie_Portman_-_Natalies_Rap.jpg
 #AUTHOR:Laurent Arnoud <laurent@spkdev.net>
 #LICENSE:WTFPL

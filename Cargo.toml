@@ -15,3 +15,4 @@ name = "karaorust"
 
 [dependencies]
 combine = "1.0.1"
+rodio = "0.3.1"
