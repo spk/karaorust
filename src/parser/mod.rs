@@ -4,7 +4,8 @@ use std::fs::File;
 use std::path::Path;
 use std::io::prelude::*;
 use std::process;
-use std::thread::sleep_ms;
+use std::thread::sleep;
+use std::time::Duration;
 
 use combine::primitives::{ from_iter, Parser, ParseError, ParseResult, State, Stream };
 use combine::combinator::{ many, parser, satisfy, Expected, Skip, skip_many, skip_many1, token,
@@ -14,7 +15,7 @@ use combine::char::{ char, digit, space, spaces, Spaces, string, newline, alpha_
 
 #[derive(PartialEq, Debug)]
 pub struct Lyric {
-    pub duration: u32,
+    pub duration: u64,
     pub text: String,
 }
 
@@ -57,7 +58,7 @@ where I: Stream<Item=char> {
      , newline())
         .map(|(_, _, _, _, duration, _, _, _, text, _)| {
             Lyric {
-                duration: duration.parse::<u32>().unwrap() * 100,
+                duration: duration.parse::<u64>().unwrap() * 100,
                 text: text.trim_right().to_string()
             }
         })
@@ -116,7 +117,7 @@ pub fn parse_karaoke_file(input: &str) {
             }
             for lyric in k.lyrics.iter() {
                 println!("{}", lyric.text);
-                sleep_ms(lyric.duration);
+                sleep(Duration::from_millis(lyric.duration));
             }
         },
         Err(err) => {
