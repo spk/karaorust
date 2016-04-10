@@ -16,4 +16,4 @@ name = "karaorust"
 name = "karaorust"
 
 [dependencies]
-combine = "1.0.1"
+combine = "1.2.1"
