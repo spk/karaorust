@@ -3,7 +3,7 @@ extern crate karaorust;
 use std::env;
 use std::process;
 
-use karaorust::{ parse_karaoke_file };
+use karaorust::parse_karaoke_file;
 
 fn print_usage(program: &str) {
     let brief = format!("Usage: {} FILE", program);
@@ -22,7 +22,7 @@ pub fn input_from_args(args: env::Args, program: &str) -> String {
             println!("Error: {}", err);
             print_usage(&program);
             process::exit(1);
-        },
+        }
     };
     input
 }

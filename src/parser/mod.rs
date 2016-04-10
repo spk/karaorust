@@ -7,9 +7,9 @@ use std::process;
 use std::thread::sleep;
 use std::time::Duration;
 
-use combine::primitives::{ from_iter, Parser, ParseResult, State, Stream };
-use combine::combinator::{ many, parser, satisfy, skip_many, skip_many1, token, ParserExt };
-use combine::char::{ char, digit, space, spaces, newline, alpha_num };
+use combine::primitives::{from_iter, Parser, ParseResult, State, Stream};
+use combine::combinator::{many, parser, satisfy, skip_many, skip_many1, token, ParserExt};
+use combine::char::{char, digit, space, spaces, newline, alpha_num};
 
 #[derive(PartialEq, Debug)]
 pub struct Lyric {
@@ -20,66 +20,70 @@ pub struct Lyric {
 #[derive(PartialEq, Debug)]
 pub struct Karaoke {
     pub header: HashMap<String, String>,
-    pub lyrics: Vec<Lyric>
+    pub lyrics: Vec<Lyric>,
 }
 
 fn header<I>(input: State<I>) -> ParseResult<(String, String), I>
-where I: Stream<Item=char> {
+    where I: Stream<Item = char>
+{
     let lex_char = |c| char(c).skip(spaces());
-    (lex_char('#')
-     , many::<String, _>(alpha_num())
-     , lex_char(':')
-     , many::<String, _>(satisfy(|c| c != '\n'))
-     , newline())
+    (lex_char('#'),
+     many::<String, _>(alpha_num()),
+     lex_char(':'),
+     many::<String, _>(satisfy(|c| c != '\n')),
+     newline())
         .map(|(_, key, _, value, _)| (key, value.trim_right().to_string()))
         .expected("header")
         .parse_state(input)
 }
 
 fn headers<I>(input: State<I>) -> ParseResult<HashMap<String, String>, I>
-where I: Stream<Item=char> {
-    many(parser(header))
-        .parse_state(input)
+    where I: Stream<Item = char>
+{
+    many(parser(header)).parse_state(input)
 }
 
 fn lyric<I>(input: State<I>) -> ParseResult<Lyric, I>
-where I: Stream<Item=char> {
-    (char(':')
-     , spaces()
-     , many::<String, _>(digit())
-     , spaces()
-     , many::<String, _>(digit())
-     , spaces()
-     , many::<String, _>(digit())
-     , spaces()
-     , many::<String, _>(satisfy(|c| c != '\n'))
-     , newline())
+    where I: Stream<Item = char>
+{
+    (char(':'),
+     spaces(),
+     many::<String, _>(digit()),
+     spaces(),
+     many::<String, _>(digit()),
+     spaces(),
+     many::<String, _>(digit()),
+     spaces(),
+     many::<String, _>(satisfy(|c| c != '\n')),
+     newline())
         .map(|(_, _, _, _, duration, _, _, _, text, _)| {
             Lyric {
                 duration: duration.parse::<u64>().unwrap() * 100,
-                text: text.trim_right().to_string()
+                text: text.trim_right().to_string(),
             }
         })
-    .expected("lyric")
-    .parse_state(input)
-}
-
-fn split<I>(input: State<I>) -> ParseResult<(), I>
-where I: Stream<Item=char> {
-    let split = (token('-'), skip_many(satisfy(|c| c != '\n'))).map(|_| ());
-    skip_many(skip_many1(space()).or(split))
+        .expected("lyric")
         .parse_state(input)
 }
 
+fn split<I>(input: State<I>) -> ParseResult<(), I>
+    where I: Stream<Item = char>
+{
+    let split = (token('-'), skip_many(satisfy(|c| c != '\n'))).map(|_| ());
+    skip_many(skip_many1(space()).or(split)).parse_state(input)
+}
+
 pub fn karaoke<I>(input: State<I>) -> ParseResult<Karaoke, I>
-where I: Stream<Item=char> {
+    where I: Stream<Item = char>
+{
     (parser(headers), many(parser(lyric).skip(parser(split))), char('E'))
         .map(|(h, l, _)| {
             Karaoke {
                 header: h,
-                lyrics: l
+                lyrics: l,
             }
-    }).parse_state(input)
+        })
+        .parse_state(input)
 }
 
 pub fn read_karaoke_file(input: &str) -> String {
@@ -89,7 +93,7 @@ pub fn read_karaoke_file(input: &str) -> String {
         Err(err) => {
             println!("Couldn't open {}: {}", display, Error::description(&err));
             process::exit(1);
-        },
+        }
         Ok(file) => file,
     };
 
@@ -98,7 +102,7 @@ pub fn read_karaoke_file(input: &str) -> String {
         Err(err) => {
             println!("Couldn't read {}: {}", display, Error::description(&err));
             process::exit(1);
-        },
+        }
         Ok(_) => println!("Starting karaoke with {}", display),
     }
     buffer
@@ -117,7 +121,7 @@ pub fn parse_karaoke_file(input: &str) {
                 println!("{}", lyric.text);
                 sleep(Duration::from_millis(lyric.duration));
             }
-        },
+        }
         Err(err) => {
             println!("Couldn't read file: {}", Error::description(&err));
             process::exit(1);

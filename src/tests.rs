@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use combine::*;
 
-use super::{ karaoke, read_karaoke_file, Karaoke, Lyric };
+use super::{karaoke, read_karaoke_file, Karaoke, Lyric};
 
 #[test]
 fn test_header_line() {
@@ -13,7 +13,7 @@ fn test_header_line() {
     header.insert("ARTIST".to_string(), "Natalie Portman".to_string());
     let expected = Karaoke {
         header: header,
-        lyrics: vec![]
+        lyrics: vec![],
     };
     match result {
         Ok(result) => assert_eq!(result, (expected, "")),
@@ -32,7 +32,10 @@ fn test_karaoke_simple() {
     header.insert("TITLE".to_string(), "Natalie\'s Rap".to_string());
     let expected = Karaoke {
         header: header,
-        lyrics: vec![Lyric { duration: 1300, text: "We\'re sitting here today with".to_string() }]
+        lyrics: vec![Lyric {
+                         duration: 1300,
+                         text: "We\'re sitting here today with".to_string(),
+                     }],
     };
     match result {
         Ok(result) => assert_eq!(result, (expected, "")),
