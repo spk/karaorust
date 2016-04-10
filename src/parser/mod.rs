@@ -7,11 +7,9 @@ use std::process;
 use std::thread::sleep;
 use std::time::Duration;
 
-use combine::primitives::{ from_iter, Parser, ParseError, ParseResult, State, Stream };
-use combine::combinator::{ many, parser, satisfy, Expected, Skip, skip_many, skip_many1, token,
-                           FnParser, ParserExt };
-use combine::char::{ char, digit, space, spaces, Spaces, string, newline, alpha_num };
-
+use combine::primitives::{ from_iter, Parser, ParseResult, State, Stream };
+use combine::combinator::{ many, parser, satisfy, skip_many, skip_many1, token, ParserExt };
+use combine::char::{ char, digit, space, spaces, newline, alpha_num };
 
 #[derive(PartialEq, Debug)]
 pub struct Lyric {
